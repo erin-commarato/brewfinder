@@ -5,9 +5,9 @@ require('dotenv').config();
 module.exports = function(app) {
   app.get('/', function(req, res) {
     // If the user already has an account send them to the members page
-    if (req.user) {
-      res.redirect('/members');
-    }
+    // if (req.user) {
+    //   res.redirect('/members');
+    // }
     res.render('index', { api_key: process.env.MAPS_API_KEY });
   });
 

@@ -1,6 +1,9 @@
 // Requiring our models and passport as we've configured it
-var db = require('../models');
-var passport = require('../config/passport');
+const fetch = require('node-fetch');
+const db = require('../models');
+const passport = require('../config/passport');
+
+require('dotenv').config();
 
 module.exports = function(app) {
   // Using the passport.authenticate middleware with our local strategy.
@@ -50,5 +53,18 @@ module.exports = function(app) {
         id: req.user.id
       });
     }
+  });
+
+  // Get nearby breweries
+  app.get('/api/breweries/:lat/:lng', (req, res) => {
+    const lat = req.params.lat;
+    const lng = req.params.lng;
+    const breweryDBUrl = 'https://sandbox-api.brewerydb.com/v2/search/geo/point';
+
+    fetch(`${breweryDBUrl}?lat=${lat}&lng=${lng}&radius=50&key=${process.env.BREWERY_DB_API_KEY}`)
+      .then(response => response.json())
+      .then(response => {
+        res.json(response.data);
+      });
   });
 };

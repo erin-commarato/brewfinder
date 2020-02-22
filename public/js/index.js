@@ -1,8 +1,13 @@
 $(document).ready(function() {
+  let lat = null;
+  let lng = null;
+  let map = null;
+
   function showLocation(position) {
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
-    initMap(latitude, longitude);
+    lat = position.coords.latitude;
+    lng = position.coords.longitude;
+    initMap(lat, lng);
+    getNearbyBreweries();
   }
 
   function initMap(lat, lng) {
@@ -28,6 +33,24 @@ $(document).ready(function() {
     } else {
       alert('Sorry, browser does not support geolocation!');
     }
+  }
+
+  function getNearbyBreweries() {
+    console.log(lat);
+    console.log(lng);
+    fetch(`/api/breweries/${lat}/${lng}`)
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+        response.forEach(element => {
+          var myLatlng = new google.maps.LatLng(element.latitude, element.longitude);
+          var marker = new google.maps.Marker({
+            position: myLatlng,
+            title: element.name
+          });
+          marker.setMap(map);
+        });
+      });
   }
 
   getLocation();
