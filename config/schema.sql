@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS brewfinder;
+CREATE DATABASE brewfinder;
